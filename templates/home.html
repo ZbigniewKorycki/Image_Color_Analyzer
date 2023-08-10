@@ -6,9 +6,24 @@
 </head>
 <body>
     <h1>Add a New Image</h1>
-
-    <form method="POST" enctype="multipart/form-data">
-        {{form.hidden_tag()}}
+    <p>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              <ul>
+              {% for message in messages %}
+                    <li>{{ message }}</li>
+              {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </p>
+    {% if filename %}
+    <div style="padding:20px; ">
+        <img src="{{url_for('display_image', filename=filename)}}">
+    </div>
+    {% endif %}
+    <form method="POST" action="/" enctype="multipart/form-data">
+        {{form.csrf_token}}
         {{form.image()}}
         {{form.submit()}}
     </form>
