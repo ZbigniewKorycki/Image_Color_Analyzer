@@ -1,4 +1,4 @@
-from flask import Flask,flash, render_template, url_for, redirect
+from flask import Flask, flash, render_template, url_for, redirect
 import os
 from werkzeug.utils import secure_filename
 from wtforms.validators import InputRequired
@@ -25,6 +25,7 @@ bootstrap = Bootstrap5(app)
 class UploadImageForm(FlaskForm):
     image = FileField('Image', validators=[InputRequired()])
     submit = SubmitField("Submit File")
+
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
