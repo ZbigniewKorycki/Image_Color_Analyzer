@@ -1,4 +1,4 @@
-from flask import Flask,flash, render_template, request, url_for, redirect
+from flask import Flask,flash, render_template, url_for, redirect
 import os
 from werkzeug.utils import secure_filename
 from wtforms.validators import InputRequired
@@ -21,23 +21,10 @@ csrf = CSRFProtect(app)
 
 bootstrap = Bootstrap5(app)
 
-ct = ColorThief("static/uploads/tree-736885_1280.jpg")
-palette = ct.get_palette(color_count=5)
-plt.imshow([[palette[i] for i in range(5)]])
-plt.savefig("static/uploads/palette/Figure1.png")
-plt.show()
-
-
 
 class UploadImageForm(FlaskForm):
     image = FileField('Image', validators=[InputRequired()])
     submit = SubmitField("Submit File")
-
-
-def detect_colors(filename):
-    pass
-
-
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -63,6 +50,13 @@ def display_image(filename):
     return redirect(url_for('static', filename="uploads/" + filename))
 
 
+@app.route("/palette/<filename>", methods=["GET", "POST"])
+def color_analyzer(filename):
+    ct = ColorThief("static/uploads/" + filename)
+    palette = ct.get_palette(color_count=5)
+    plt.imshow([[palette[i] for i in range(5)]])
+    plt.savefig("static/palette/" + filename)
+    return redirect(url_for('static', filename="palette/" + filename))
 
 
 if __name__ == "__main__":

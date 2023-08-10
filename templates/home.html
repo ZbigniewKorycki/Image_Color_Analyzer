@@ -19,6 +19,9 @@
     </p>
     {% if filename %}
     <div style="padding:20px; ">
+        <img src="{{url_for('color_analyzer', filename=filename)}}">
+    </div>
+    <div style="padding:20px; ">
         <img src="{{url_for('display_image', filename=filename)}}">
     </div>
     {% endif %}
