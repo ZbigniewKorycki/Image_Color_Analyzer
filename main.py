@@ -1,9 +1,8 @@
 from flask import Flask, render_template, request, url_for
 from werkzeug.utils import secure_filename
-from wtforms.validators import DataRequired, InputRequired, ValidationError
 from flask_bootstrap import Bootstrap5
 from flask_wtf import FlaskForm, CSRFProtect
-from wtforms import StringField, SubmitField, FileField, TextAreaField
+from wtforms import SubmitField, FileField
 import secrets
 
 
@@ -22,21 +21,18 @@ bootstrap = Bootstrap5(app)
 
 
 class UploadImageForm(FlaskForm):
-    filename = StringField('Filename', validators=[InputRequired()])
-    image = FileField('Image', validators=[DataRequired()])
-    description = TextAreaField('Image description')
-    submit = SubmitField()
+    image = FileField('Image')
+    submit = SubmitField("Submit File")
 
 def allowed_file(image):
-    if "." in image and image.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS:
-        return True
-    else:
-        raise ValidationError("Incorrect image extensions")
+    return "." in image and image.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route("/", methods=("GET", "POST"))
 def home():
     form = UploadImageForm()
+    if form.validate_on_submit():
+        file = form.image
     return render_template("home.html", form=form)
 
 
